@@ -1,4 +1,4 @@
-# HemoStroke-PPG
+# HemoStroke-PPG-Artifact
 
 Code repository for **In-Hospital Stroke Risk-State Classification from PPG-Derived Hemodynamic Features**.
 
@@ -12,7 +12,7 @@ Included:
 - MC-MED radiology-text normalization and reviewed-anchor-to-Pleth-index generation utilities.
 - PPG feature extraction, feature cleaning, relative-feature engineering, and temporal relabeling.
 - Standard main-experiment packaging for MIMIC train/validation/test arrays and frozen MC-MED test arrays.
-- ResNet-1D main model and manuscript-aligned clinical-score and structured-EHR reference baselines.
+- ResNet-1D main model and manuscript-aligned clinical-score and structured-EHR baseline reference outputs.
 - Patient-level split checks, thresholded evaluation, false-alert burden, SHAP, ROC, subgroup, sensitivity, and quality-control scripts.
 - Minimal tests for label logic, patient-level splitting, filter alignment, and model tensor shapes.
 
@@ -23,6 +23,12 @@ Not included:
 ## Main Results
 
 The main manuscript comparison uses the proposed PPG model against available-component clinical-score and structured-EHR reference baselines: CHA2DS2-VASc_avail, Nwosu-EHR RF, Teoh-EHR XGB, and Yang-EHR ML.
+
+The public repository provides the manuscript Table III values and an exporter
+for regenerating the reported table. Recomputing the clinical-score and
+structured-EHR baseline values requires restricted local EHR tables, reviewed
+onset anchors, and the same patient-level partitions used in the study; those
+non-redistributable inputs are not included.
 
 | Horizon | Cohort    | Model        |          Accuracy |         Precision |            Recall |                F1 |                F2 |               AUC |
 | ------: | --------- | ------------ | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: | ----------------: |
@@ -74,6 +80,10 @@ outputs/                 Local-only generated outputs; tracked README only
 ```
 
 New work should use `src/`, `scripts/`, and `configs/`.
+
+Legacy auxiliary sequence-model code is retained in `src/models/lstm.py` and
+`configs/lstm_baseline.yaml` for compatibility with earlier experiments. It is
+not part of the current manuscript benchmark.
 
 ## Historical LLM Extraction Run
 
@@ -178,6 +188,7 @@ MIMIC-III and `MRN` for MC-MED) over waveform- or encounter-level fallbacks.
 Figure, table, and robustness scripts:
 
 ```bash
+python scripts/reproduce/table3_main_benchmarks.py --help
 python scripts/reproduce/figure_roc.py --help
 python scripts/reproduce/figure_shap.py --help
 python scripts/reproduce/figure_temporal_cases.py --help
