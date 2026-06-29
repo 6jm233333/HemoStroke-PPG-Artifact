@@ -21,6 +21,12 @@ These benchmark values are the study-level reference results associated with thi
 
 Warning prediction performance across pre-anchor horizons, cohorts, and reference baselines.
 
+The clinical-score and structured-EHR baselines are reference outputs from the
+restricted local analysis pipeline used for the manuscript. The public artifact
+includes the emitted values and `scripts/reproduce/table3_main_benchmarks.py`
+to regenerate this table, but it cannot recompute those baselines without the
+non-redistributable clinical tables, reviewed anchors, and local partitions.
+
 | Horizon | Cohort | Model | Accuracy | Precision | Recall | F1 | F2 | AUC |
 |---:|---|---|---:|---:|---:|---:|---:|---:|
 | 240 | MIMIC-III | Ours | 0.6654 +/- 0.0047 | 0.6681 +/- 0.0041 | 0.9833 +/- 0.0106 | 0.7956 +/- 0.0027 | 0.8985 +/- 0.0062 | 0.6525 +/- 0.0530 |
@@ -56,12 +62,17 @@ Warning prediction performance across pre-anchor horizons, cohorts, and referenc
 
 ## False-Alert Burden
 
-| Horizon | MIMIC FPR | MIMIC TPR | MIMIC ID+ | MC-MED FPR | MC-MED TPR | MC-MED ID+ |
-|---:|---:|---:|---:|---:|---:|---:|
-| 240 | 0.167 | 0.983 | 0.061 | 0.166 | 0.934 | 0.030 |
-| 300 | 0.288 | 0.965 | 0.145 | 0.197 | 0.940 | 0.038 |
-| 360 | 0.294 | 0.998 | 0.174 | 0.137 | 0.980 | 0.018 |
+| Horizon | Cohort | Npkg | Nwin | NID | FPR | Stroke TPR | ID+ |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 240 | MIMIC-III | 12,972 | 2,997 | 229 | 0.1672 | 0.9833 | 0.0611 |
+| 300 | MIMIC-III | 12,973 | 2,954 | 227 | 0.2881 | 0.9647 | 0.1454 |
+| 360 | MIMIC-III | 12,975 | 2,910 | 230 | 0.2938 | 0.9981 | 0.1739 |
+| 240 | MC-MED | 7,416 | 1,257 | 165 | 0.1663 | 0.9341 | 0.0303 |
+| 300 | MC-MED | 7,431 | 1,275 | 159 | 0.1969 | 0.9401 | 0.0377 |
+| 360 | MC-MED | 7,419 | 1,284 | 164 | 0.1371 | 0.9804 | 0.0183 |
 
+`Npkg` denotes packaged control windows before NaN filtering, `Nwin` denotes
+NaN-free inference windows, and `NID` denotes file-level evaluation identifiers.
 `ID+` is the fraction of file-level evaluation identifiers with at least five
 consecutive positive 500-beat windows. These values use the frozen operating
 threshold selected on MIMIC validation.
