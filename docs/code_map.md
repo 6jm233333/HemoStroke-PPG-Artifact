@@ -13,7 +13,12 @@ This file maps the study workflow to maintained public code. The entry points be
 | Main horizon Numpy packaging | `src/datasets/build_main_horizon_sets.py` |
 | External feature projection and subgroup packaging | `src/datasets/build_external_eval_set.py`, `src/datasets/build_subgroup_sets.py` |
 | ResNet-1D training and evaluation | `src/models/train.py`, `src/models/evaluate.py`, `src/models/resnet1d.py` |
+| Main benchmark reference table | `scripts/reproduce/table3_main_benchmarks.py`, `docs/benchmark_results.md` |
 | SHAP and temporal trajectories | `src/explain/shap_analysis.py`, `src/explain/plot_feature_trajectories.py` |
 | ROC, false-alert, subgroup, and robustness analysis | `src/analysis/*`, `src/models/sensitivity.py`, `scripts/reproduce/*` |
 
 New experiments should use `src/`, `scripts/`, and `configs/`. The public repository intentionally excludes restricted clinical artifacts, generated arrays, checkpoints, predictions, and manuscript files.
+
+`src/models/lstm.py` and `configs/lstm_baseline.yaml` are retained as legacy
+auxiliary implementation files and are not part of the current manuscript
+benchmark.
