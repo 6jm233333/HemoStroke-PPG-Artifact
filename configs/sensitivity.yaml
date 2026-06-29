@@ -1,0 +1,70 @@
+project:
+  name: hemostroke_ppg
+  seed: 42
+
+base_configs:
+  feature_config: configs/feature_extraction.yaml
+  training_config: configs/training.yaml
+
+sensitivity:
+  enabled: true
+  type: onset_time_shift
+
+  horizons:
+    - name: h4
+      hours: 4
+      minutes: 240
+      data_dir:
+        mimic: data/processed/mimic/horizon_sets/240min
+        mcmed: data/processed/mcmed/horizon_sets/240min
+      output_dir: outputs/sensitivity/h4_240min
+
+    - name: h5
+      hours: 5
+      minutes: 300
+      data_dir:
+        mimic: data/processed/mimic/horizon_sets/300min
+        mcmed: data/processed/mcmed/horizon_sets/300min
+      output_dir: outputs/sensitivity/h5_300min
+
+    - name: h6
+      hours: 6
+      minutes: 360
+      data_dir:
+        mimic: data/processed/mimic/horizon_sets/360min
+        mcmed: data/processed/mcmed/horizon_sets/360min
+      output_dir: outputs/sensitivity/h6_360min
+
+  shift_unit: minutes
+  shift_values:
+    - -60
+    - -30
+    - -15
+    - 0
+    - 15
+    - 30
+    - 60
+
+  relabel_after_shift: true
+  rebuild_sequences_after_shift: true
+  rerun_training_after_shift: true
+  
+  keep_same_folds_as_main_experiment: true
+  keep_same_pid_mapping_as_main_experiment: true
+
+evaluation:
+  compare_to_baseline_shift: 0
+  primary_metric: f1
+  tolerance_window_minutes: 15
+  secondary_metrics:
+    - auc
+    - auprc
+    - recall
+    - precision
+
+output:
+  save_per_shift_metrics: true
+  save_per_horizon_summary_csv: true
+  save_global_summary_csv: true
+  save_shift_curve_plot: true
+  save_predictions: false

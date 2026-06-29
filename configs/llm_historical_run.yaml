@@ -1,0 +1,39 @@
+historical_extraction_run:
+  provider: Google
+  model_identifier: gemini-3-pro-preview
+  inference_date_range:
+    start: "2025-12-22"
+    end: "2025-12-29"
+  service_lifecycle:
+    released: "2025-11-18"
+    discontinued: "2026-03-09"
+    successor: gemini-3.1-pro-preview
+    source: https://ai.google.dev/gemini-api/docs/changelog
+
+artifact_preserved:
+  prompt: prompts/stroke_timestamp_extraction.md
+  canonical_input_fields:
+    - Row_ID
+    - CHARTTIME
+    - TEXT
+  output_fields:
+    - Row_ID
+    - Extracted_Timestamp
+  output_null_token: "NULL"
+
+request_wrapper:
+  invocation_transport: not_preserved
+  region: not_preserved
+  temperature: not_preserved
+  top_p: not_preserved
+  top_k: not_preserved
+  max_output_tokens: not_preserved
+  seed: not_preserved
+  thinking_configuration: not_preserved
+
+replay_boundary:
+  exact_retired_endpoint_replay: false
+  note: >-
+    The retired preview endpoint and the original request wrapper cannot be
+    replayed exactly. Use the released prompt and local post-processing code
+    for transparent reconstruction with an available successor model.

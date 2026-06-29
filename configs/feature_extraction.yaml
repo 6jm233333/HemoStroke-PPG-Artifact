@@ -1,0 +1,173 @@
+project:
+  name: hemostroke_ppg
+  seed: 42
+
+feature_extraction:
+  target_signal: PLETH
+  path_column: WAVE_PATH
+
+  chunk_minutes: 30
+  min_signal_length: 5000
+  min_beats: 3
+
+  preprocessing:
+    filtering: true
+    lowcut_hz: 0.5
+    highcut_hz: 5.0
+    filter_order: 4
+    smoothing_windows:
+      ppg: 50
+      vpg: 10
+      apg: 10
+      jpg: 10
+
+  fiducial_correction:
+    on: true
+    dn: true
+    sp: false
+    dp: true
+    u: false
+    v: true
+    w: true
+    a: false
+    b: false
+    c: false
+    d: false
+    e: false
+    f: true
+    p1: false
+    p2: false
+
+feature_columns:
+  base:
+    - T_pi
+    - T_sys
+    - T_dia
+    - T_sp
+    - IPR
+    - Tsys_Tdia
+    - Tsp_Tpi
+    - A_on
+    - A_sp
+    - A_off
+    - Pulse_Amplitude
+    - SI
+  derivative:
+    - T_u
+    - Tu_Tpi
+    - T_v
+    - T_a
+    - Ta_Tpi
+    - T_b
+    - Tb_Tpi
+    - T_c
+    - Tc_Tpi
+    - T_d
+    - Td_Tpi
+    - T_e
+    - Te_Tpi
+    - T_f
+    - Tf_Tpi
+    - T_p1
+    - Tp1_Tpi
+    - T_p2
+    - Tp2_Tpi
+    - Tu_Ta_Tpi
+  variability:
+    - CV_T_pi
+    - CV_T_sys
+    - CV_Pulse_Amplitude
+
+cleaning:
+  replace_inf_with_nan: true
+  interpolation_limit: 5
+  group_column_candidates:
+    - Source_File
+    - WAVE_PATH
+  drop_rows_with_remaining_nan_in_features: true
+
+feature_engineering:
+  # Frozen paper-aligned relative feature rule: (x - mu_base) / abs(mu_base).
+  baseline_method: mean
+  baseline_fraction: 0.10
+  min_baseline_points: 5
+
+labeling:
+  # Default 240-min warning-horizon labeling.
+  pre_buffer_minutes: 15
+  onset_buffer_minutes: 15
+
+  normal_range:
+    start: -480
+    end: -255
+
+  positive_range:
+    start: -225
+    end: -15
+
+  ignore_ranges:
+    - [-255, -225]  # Buffer between normal and warning windows.
+    - [-15, inf]    # Lead-time blind zone and post-anchor observations.
+
+multi_horizon_packaging:
+  enabled: true
+
+  horizons:
+    - name: h4
+      hours: 4
+      minutes: 240
+    - name: h5
+      hours: 5
+      minutes: 300
+    - name: h6
+      hours: 6
+      minutes: 360
+
+  packaging_mode: crop_from_full_feature_table
+
+  reference_time_column: Actual_Stroke_Time
+  absolute_time_column: Absolute_Time
+  relative_time_column: Time_Rel_Min
+  label_column: Label
+  patient_group_column_candidates:
+    - Group_ID
+    - CSN
+    - SUBJECT_ID
+
+  crop_rule:
+    include_only_pre_onset: true
+    crop_end_relative_min: -15
+    require_full_horizon: true
+    drop_if_insufficient_history: true
+
+  sequence_build:
+    sort_by:
+      - Absolute_Time
+      - Beat_Idx
+    feature_axis: columns
+    save_numpy: true
+    save_csv_index: true
+    save_pid: true
+
+paths:
+  raw_feature_root:
+    mimic: data/processed/mimic/features_raw
+    mcmed: data/processed/mcmed/features_raw
+
+  engineered_feature_root:
+    mimic: data/processed/mimic/features_engineered
+    mcmed: data/processed/mcmed/features_engineered
+
+  labeled_feature_root:
+    mimic: data/processed/mimic/features_labeled
+    mcmed: data/processed/mcmed/features_labeled
+
+  packaged_output_root:
+    mimic: data/processed/mimic/horizon_sets
+    mcmed: data/processed/mcmed/horizon_sets
+
+runtime:
+  num_workers: 8
+  omp_num_threads: 1
+  mkl_num_threads: 1
+  save_summary_csv: true

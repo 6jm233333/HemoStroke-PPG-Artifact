@@ -1,0 +1,17 @@
+paths:
+  mimic:
+    raw_root: data/raw/mimic
+    interim_root: data/interim/mimic
+    processed_root: data/processed/mimic
+  mcmed:
+    raw_root: data/raw/mcmed
+    interim_root: data/interim/mcmed
+    processed_root: data/processed/mcmed
+  outputs:
+    main: outputs/main
+    figures: outputs/figures
+    sensitivity: outputs/sensitivity
+
+notes:
+  - Keep credentialed MIMIC-III and MC-MED files outside version control.
+  - Mirror this layout locally, or edit configs/*_data.yaml before running scripts.

@@ -1,0 +1,64 @@
+dataset_name: mimic
+
+paths:
+  raw_root: data/raw/mimic
+  interim_root: data/interim/mimic
+  processed_root: data/processed/mimic
+
+  icd9_icustays_merged_csv: data/raw/mimic/tables/ICD9_ICUSTAYS_MERGED.csv
+  noteevents_csv: data/raw/mimic/tables/NOTEEVENTS.csv
+  waveform_index_csv: data/raw/mimic/tables/Datasets_With_Time.csv
+
+  cleaned_note_table_csv: data/interim/mimic/STROKE_DATASET_CLEAN.csv
+  note_table_with_time_csv: data/interim/mimic/FINAL_STROKE_DATASET_WITH_TIME.csv
+  waveform_anchored_csv: data/interim/mimic/WAVEFORM_ANCHORED_STROKE_DATA.csv
+
+  llm_input_csv: data/interim/mimic/NLP/NLP.csv
+  llm_chunk_dir: data/interim/mimic/NLP/Chunks_By_Row
+  llm_output_csv: data/interim/mimic/NLP/extracted_timestamps.csv
+
+  feature_index_csv: data/processed/mimic/stroke_index_for_features.csv
+
+id_columns:
+  subject_id: SUBJECT_ID
+  hadm_id: HADM_ID
+
+time_columns:
+  note_charttime: CHARTTIME
+  waveform_start: Start_Time
+  waveform_end: End_Time
+  extracted_stroke_time: Extracted_Timestamp
+
+text_columns:
+  note_text: TEXT
+
+waveform_columns:
+  waveform_path: WAVE_PATH
+  original_waveform_path: TARGET_PATH
+
+note_filter:
+  require_charttime: true
+  clean_text: true
+  chunk_size: 100000
+  replace_newline_with_space: true
+  replace_tab_with_space: true
+  replace_double_quote: true
+
+waveform_anchor:
+  buffer_hours_after_wave_end: 4
+  require_note_in_window: true
+
+llm_chunking:
+  rows_per_file: 300
+  hard_limit_chars: 200000
+  soft_limit_chars: 200000
+  drop_empty_text: true
+
+mimic_clinical_tables:
+  admissions: data/raw/mimic/tables/ADMISSIONS.csv
+  patients: data/raw/mimic/tables/PATIENTS.csv
+  diagnoses: data/raw/mimic/tables/DIAGNOSES_ICD.csv
+
+quality_control:
+  save_processing_log: true
+  fail_if_no_notes_found: true

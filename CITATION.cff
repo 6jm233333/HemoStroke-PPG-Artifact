@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Please cite this repository using the metadata below."
+title: "HemoStroke-PPG"
+authors:
+  - family-names: "Liu"
+    given-names: "Jiaming"
+  - family-names: "Ding"
+    given-names: "Cheng"
+  - family-names: "Zhang"
+    given-names: "Daoqiang"
+year: 2026
+repository-code: "https://github.com/6jm233333/HemoStroke-PPG"
