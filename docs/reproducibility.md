@@ -122,11 +122,27 @@ python -m src.models.train --config configs/training.yaml
 python -m src.models.evaluate --config configs/training.yaml
 ```
 
-## 6. Robustness and Figure Reproduction
+## 6. Main Benchmark Table
+
+Export the manuscript Table III benchmark reference values:
+
+```bash
+python scripts/reproduce/table3_main_benchmarks.py \
+  --format markdown \
+  --output outputs/table3_main_benchmarks.md
+```
+
+This command regenerates the reported table from the checked-in reference
+values. It does not recompute clinical-score or structured-EHR baselines from
+raw data. Recomputing those baselines requires the restricted local EHR tables,
+physician-reviewed anchors, and patient-level partitions used in the manuscript.
+
+## 7. Robustness and Figure Reproduction
 
 ```bash
 python -m src.models.sensitivity --help
 python scripts/qc/summarize_label_coverage.py --help
+python scripts/reproduce/table3_main_benchmarks.py --help
 python scripts/reproduce/figure_roc.py --help
 python scripts/reproduce/figure_shap.py --help
 python scripts/reproduce/figure_temporal_cases.py --help
@@ -136,7 +152,7 @@ python scripts/reproduce/table4_false_alert_burden.py --help
 
 Regenerated tables and figures should be written to `outputs/`. Manuscript source, compiled PDFs, and paper-ready figure files are intentionally outside the GitHub repository.
 
-## 7. Frozen Operating Threshold and False-Alert Burden
+## 8. Frozen Operating Threshold and False-Alert Burden
 
 The released model configs record the operating threshold selected on MIMIC
 validation. `src.models.train` and `src.models.evaluate` apply the configured
@@ -163,7 +179,7 @@ within-file window-order column. The script reads the frozen threshold from
 computes `ID+` as the fraction of file-level identifiers with at least five
 consecutive positive windows.
 
-## 8. Reproduction Checks
+## 9. Reproduction Checks
 
 - Use patient-level splits only.
 - Verify no patient ID appears in more than one fold partition.
